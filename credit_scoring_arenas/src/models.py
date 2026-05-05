@@ -74,7 +74,7 @@ def _predict_scores(model: object, X: pd.DataFrame) -> np.ndarray:
     if hasattr(model, "decision_function"):
         scores = model.decision_function(X)
         return np.asarray(scores, dtype="float64")
-    raise ValueError("Model must implement predict_proba or decision_function.")
+    raise ValueError("El modelo debe implementar predict_proba o decision_function.")
 
 
 def train_all_models(X: pd.DataFrame, y: pd.Series) -> dict[str, object]:
@@ -118,6 +118,9 @@ def evaluate_models(
 
 def save_model(model: object, path: str, metadata: dict) -> Path:
     """Guarda en disco el modelo entrenado junto con su metadata."""
+    if not isinstance(metadata, dict):
+        raise TypeError("metadata debe ser un diccionario.")
+
     output_dir = Path(path)
     output_dir.mkdir(parents=True, exist_ok=True)
 
@@ -130,8 +133,8 @@ def save_model(model: object, path: str, metadata: dict) -> Path:
 
     metadata_to_save = dict(metadata)
     metadata_to_save["saved_at"] = date.today().isoformat()
-    if "hyperparameters" not in metadata_to_save and hasattr(model, "get_params"):
-        metadata_to_save["hyperparameters"] = model.get_params()
+    if hasattr(model, "get_params"):
+        metadata_to_save.setdefault("hyperparameters", model.get_params())
     metadata_to_save = _to_serializable(metadata_to_save)
 
     metadata_path = output_dir / "metadata.json"
