@@ -15,6 +15,7 @@ from xgboost import XGBClassifier
 
 SEED = 42
 CV_FOLDS = 5
+N_JOBS = 1
 
 MODELOS_CONFIG = {
     "Logistic Regression": (
@@ -87,7 +88,7 @@ def train_all_models(X: pd.DataFrame, y: pd.Series) -> dict[str, object]:
             param_grid=param_grid,
             scoring="roc_auc",
             cv=CV_FOLDS,
-            n_jobs=-1,
+            n_jobs=N_JOBS,
             refit=True,
         )
         grid.fit(X, y)
