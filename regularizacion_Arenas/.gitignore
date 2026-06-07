@@ -1,6 +1,7 @@
 # Datos y modelos grandes
 data/raw/*
 data/processed/*
+data/external/yfinance_cache/*
 !data/raw/.gitkeep
 !data/processed/.gitkeep
 models/**/*.pkl
